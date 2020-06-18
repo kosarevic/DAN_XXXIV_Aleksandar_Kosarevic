@@ -11,8 +11,7 @@ namespace Zadatak_1
     {
         static readonly Random r = new Random();
         private static object theLock = new object();
-        static int sum1 = 10000;
-        static int sum2 = 10000;
+        static int sum = 10000;
 
         static void Main(string[] args)
         {
@@ -27,10 +26,27 @@ namespace Zadatak_1
 
                 if (success)
                 {
-                    for (int i = 0; i < clients1; i++)
+                    int j = 1;
+                    for (int i = 1; i <= clients1; i++)
                     {
-                        Thread t = new Thread(Withdraw);
-                        t.Start();
+                        Thread t1 = new Thread(Withdraw);
+                        t1.Name = "First ATM";
+                        t1.Start();
+                        t1.Join();
+
+                        while(j<=clients2)
+                        {
+                            j++;
+                            Thread t2 = new Thread(Withdraw);
+                            t2.Name = "Second ATM";
+                            t2.Start();
+                            t2.Join();
+                            
+                            if(i<clients1)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -42,14 +58,14 @@ namespace Zadatak_1
 
         static void Withdraw()
         {
-            int withdrawal = r.Next(100, 10000);
+            int withdrawal = r.Next(100, 200);
 
             lock (theLock)
             {
-                if (sum1 - withdrawal >= 0)
+                if (sum - withdrawal >= 0)
                 {
-                    sum1 -= withdrawal;
-                    Console.WriteLine("Remaining sum on first ATM: " + sum1);
+                    sum -= withdrawal;
+                    Console.WriteLine(Thread.CurrentThread.Name + "Remaining sum in a bank: " + sum);
                 }
                 else
                 {
