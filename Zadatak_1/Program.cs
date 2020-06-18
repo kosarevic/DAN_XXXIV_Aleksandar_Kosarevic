@@ -16,19 +16,28 @@ namespace Zadatak_1
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Insert number of clients for first bankomat.");
-            bool success = int.TryParse(Console.ReadLine(), out int clients);
-
-            if (success)
+            string input;
+            do
             {
-                for (int i = 0; i < clients; i++)
-                {
-                    Thread t = new Thread(Withdraw);
-                    t.Start();
-                }
-            }
+                Console.WriteLine("Insert number of clients for first ATM.");
+                bool success = int.TryParse(Console.ReadLine(), out int clients1);
 
-            Console.ReadLine();
+                Console.WriteLine("Inser number of clients for second ATM.");
+                success = int.TryParse(Console.ReadLine(), out int clients2);
+
+                if (success)
+                {
+                    for (int i = 0; i < clients1; i++)
+                    {
+                        Thread t = new Thread(Withdraw);
+                        t.Start();
+                    }
+                }
+
+                input = Console.ReadLine();
+            } while (input != "~");
+
+            
         }
 
         static void Withdraw()
@@ -40,7 +49,7 @@ namespace Zadatak_1
                 if (sum1 - withdrawal >= 0)
                 {
                     sum1 -= withdrawal;
-                    Console.WriteLine("Remaining sum: " + sum);
+                    Console.WriteLine("Remaining sum on first ATM: " + sum1);
                 }
                 else
                 {
